@@ -22,10 +22,10 @@ p1 + geom_bar(position="stack")
 p2 <- ggplot(data=data, aes(lat, fill=brd))
 p2 + geom_bar(position="stack")
 
-cont_table <- table(data$brd, data$lat)
+cont_table <- table(data$brd, data$lat)                                         #create contingency table
 cont_table
 
-chisq.test(cont_table)
+chisq.test(cont_table)                                                          #are there any significant differences?
 mosaicplot(t(cont_table))
 
 data <- data %>%                                                                #combine into 3 groups (L, R, Bilat)
@@ -40,20 +40,20 @@ mosaicplot(t(cont_table_2))
 
 p3 <- ggplot(data=data, aes(lat_group, fill=brd))
 p3 + geom_bar(position="stack") +
-  theme_bw()
+  theme_bw()                                                                    #not quite what I wanted - colors don't get overridden?
 
-  #need logistic regression model to get OR for individual laterality
+  #need regression model to get OR for individual laterality
 t1 <- as.data.frame.table(cont_table_2)                                         #create tall data from contingency table
 colnames(t1) <- c("brd", "lat", "freq")
 str(t1) #check to make sure table looks correct
 
-model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)                #create logistic regression model and view log odds ratios
-summary(model1)
-confint(model1)
+#model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)                #create logistic regression model and view log odds ratios
+#summary(model1)
+#confint(model1)
   #OR table
-t2 <- exp(cbind(OddsRatio=coef(model1), confint(model1))) %>%                   #extract odds ratios and confidence intervals
-  round(digits=4)
-t2[c(2,3),]
+#t2 <- exp(cbind(OddsRatio=coef(model1), confint(model1))) %>%                   #extract odds ratios and confidence intervals
+#  round(digits=4)
+#t2[c(2,3),]
 
   #multinomial model
 model2 <- multinom(lat ~ brd, data = t1, weights = freq)                        #more appropriate model - but not comparing L to R
