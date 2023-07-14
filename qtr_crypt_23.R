@@ -1,6 +1,7 @@
 library(ggplot2)
 library(magrittr)
 library(tidyverse)
+library(nnet)
 
 
 getwd()
@@ -46,10 +47,23 @@ t1 <- as.data.frame.table(cont_table_2)                                         
 colnames(t1) <- c("brd", "lat", "freq")
 str(t1) #check to make sure table looks correct
 
-model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)                #create model and view log odds ratios
+model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)                #create logistic regression model and view log odds ratios
 summary(model1)
 confint(model1)
   #OR table
 t2 <- exp(cbind(OddsRatio=coef(model1), confint(model1))) %>%                   #extract odds ratios and confidence intervals
   round(digits=4)
 t2[c(2,3),]
+
+  #multinomial model
+model2 <- multinom(lat ~ brd, data = t1, weights = freq)                        #more appropriate model - but not comparing L to R
+summary(model2)
+exp(coef(model2))
+exp(confint(model2))
+
+t1$lat <- fct_relevel(t1$lat, "R")                                              #relevel to compare L vs R
+
+model3 <- multinom(lat ~ brd, data = t1, weights = freq)                        
+summary(model2)
+exp(coef(model2))
+exp(confint(model2))
