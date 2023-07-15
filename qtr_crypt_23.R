@@ -26,7 +26,7 @@ p2 + geom_bar(position="stack", color="black") +
                     values=c("grey","white"),
                     labels=c("Other", "Quarterhorse")) +
   theme_classic() +
-  labs(x="Laterality", y="Percentage of Total")
+  labs(x="Laterality", y="Total Cases")
 ggsave("plot2", device="png")
 
 cont_table <- table(data$brd, data$lat)                                         #create contingency table
@@ -51,7 +51,7 @@ p3 + geom_bar(position="stack", color="black") +
                     values=c("grey","white"),
                     labels=c("Other", "Quarterhorse")) +
   theme_classic() +
-  labs(x="Laterality", y="Percentage of Total")
+  labs(x="Laterality", y="Total Cases")
 ggsave("plot3", device="png")                                                   
 
   #need regression model to get OR for individual laterality
