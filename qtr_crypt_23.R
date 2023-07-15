@@ -75,7 +75,7 @@ exp(confint(model2))
 
 t1$lat <- fct_relevel(t1$lat, "R")                                              #relevel to compare L vs R
 
-model3 <- multinom(lat ~ brd, data = t1, weights = freq)                        
-summary(model2)
-exp(coef(model2))
-exp(confint(model2))
+model3 <- multinom(lat ~ brd, data = t1, weights = freq)                      
+summary(model3)
+exp(coef(model3))
+exp(confint(model3))
