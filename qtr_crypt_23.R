@@ -45,13 +45,13 @@ p3 + geom_bar(position="stack") +
   #need regression model to get OR for individual laterality
 t1 <- as.data.frame.table(cont_table_2)                                         #create tall data from contingency table
 colnames(t1) <- c("brd", "lat", "freq")
-str(t1) #check to make sure table looks correct
+str(t1)                                                                         #check to make sure table looks correct
 
-#model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)                #create logistic regression model and view log odds ratios
+#model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)               #create logistic regression model and view log odds ratios
 #summary(model1)
 #confint(model1)
   #OR table
-#t2 <- exp(cbind(OddsRatio=coef(model1), confint(model1))) %>%                   #extract odds ratios and confidence intervals
+#t2 <- exp(cbind(OddsRatio=coef(model1), confint(model1))) %>%                  #extract odds ratios and confidence intervals
 #  round(digits=4)
 #t2[c(2,3),]
 
