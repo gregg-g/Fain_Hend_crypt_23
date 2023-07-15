@@ -21,9 +21,13 @@ p1 + geom_bar(position="fill")
 ggsave("plot1", device="png")
 
 p2 <- ggplot(data=data, aes(lat, fill=brd))
-p2 + geom_bar(position="fill", color="black") +
-  scale_fill_manual(values=c("grey","white")) +
-  theme_classic()
+p2 + geom_bar(position="stack", color="black") +
+  scale_fill_manual(name="Breed",
+                    values=c("grey","white"),
+                    labels=c("Other", "Quarterhorse")) +
+  theme_classic() +
+  labs(x="Laterality", y="Percentage of Total")
+ggsave("plot2", device="png")
 
 cont_table <- table(data$brd, data$lat)                                         #create contingency table
 cont_table
@@ -42,8 +46,13 @@ fisher.test(cont_table_2)
 mosaicplot(t(cont_table_2))
 
 p3 <- ggplot(data=data, aes(lat_group, fill=brd))
-p3 + geom_bar(position="stack") +
-  theme_bw()                                                                    #not quite what I wanted - colors don't get overridden?
+p3 + geom_bar(position="stack", color="black") +
+  scale_fill_manual(name="Breed",
+                    values=c("grey","white"),
+                    labels=c("Other", "Quarterhorse")) +
+  theme_classic() +
+  labs(x="Laterality", y="Percentage of Total")
+ggsave("plot3", device="png")                                                   
 
   #need regression model to get OR for individual laterality
 t1 <- as.data.frame.table(cont_table_2)                                         #create tall data from contingency table
