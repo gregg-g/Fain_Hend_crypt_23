@@ -17,10 +17,13 @@ t.test(wt ~ brd, data = data)                                                   
 
   #plot laterality by breed
 p1 <- ggplot(data=data, aes(brd, fill=lat))
-p1 + geom_bar(position="stack")
+p1 + geom_bar(position="fill")
+ggsave("plot1", device="png")
 
 p2 <- ggplot(data=data, aes(lat, fill=brd))
-p2 + geom_bar(position="stack")
+p2 + geom_bar(position="fill", color="black") +
+  scale_fill_manual(values=c("grey","white")) +
+  theme_classic()
 
 cont_table <- table(data$brd, data$lat)                                         #create contingency table
 cont_table
