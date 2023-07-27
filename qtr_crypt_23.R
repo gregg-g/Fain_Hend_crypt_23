@@ -3,9 +3,6 @@ library(magrittr)
 library(tidyverse)
 library(nnet)
 
-
-getwd()
-setwd("~/SynologyDrive/GreggDrive/Other Stats/Fain_Hend_crypt_23")
 data <- read.csv(file="crypt_data.csv", colClasses = c("integer",
                                                        "NULL",
                                                        "factor",
@@ -13,9 +10,10 @@ data <- read.csv(file="crypt_data.csv", colClasses = c("integer",
                                                        "factor"))
 head(data)
 str(data)
-t.test(wt ~ brd, data = data)                                                   #check that weight between groups is not different
+     #check that weight between groups is not different
+t.test(wt ~ brd, data = data)
 
-  #plot laterality by breed
+     #plot laterality by breed
 p1 <- ggplot(data=data, aes(brd, fill=lat))
 p1 + geom_bar(position="fill")
 ggsave("plot1", device="png")
@@ -29,23 +27,28 @@ p2 + geom_bar(position="stack", color="black") +
   labs(x="Laterality", y="Total Cases")
 ggsave("plot2", device="png")
 
-cont_table <- table(data$brd, data$lat)                                         #create contingency table
+     #create contingency table
+cont_table <- table(data$brd, data$lat)
 cont_table
 
-chisq.test(cont_table)                                                          #are there any significant differences?
+     #are there any significant differences?
+chisq.test(cont_table)
 mosaicplot(t(cont_table))
 
-data <- data %>%                                                                #combine into 3 groups (L, R, Bilat)
+     #combine into 3 groups (L, R, Bilat)
+data_small <- data %>%
   mutate(lat_group = substr(lat, 1, 1))
 
-cont_table_2 <- table(data$brd, data$lat_group)                                 #create new contingency table with 3 groups
+     #create new contingency table with 3 groups
+cont_table_2 <- table(data_small$brd, data_small$lat_group)
 cont_table_2
 
-chisq.test(cont_table_2)                                                        #check for significant differences
+     #check for significant differences
+chisq.test(cont_table_2)
 fisher.test(cont_table_2)
 mosaicplot(t(cont_table_2))
 
-p3 <- ggplot(data=data, aes(lat_group, fill=brd))
+p3 <- ggplot(data=data_small, aes(lat_group, fill=brd))
 p3 + geom_bar(position="stack", color="black") +
   scale_fill_manual(name="Breed",
                     values=c("grey","white"),
@@ -55,25 +58,31 @@ p3 + geom_bar(position="stack", color="black") +
 ggsave("plot3", device="png")                                                   
 
   #need regression model to get OR for individual laterality
-t1 <- as.data.frame.table(cont_table_2)                                         #create tall data from contingency table
+     #create tall data from contingency table
+t1 <- as.data.frame.table(cont_table_2)
 colnames(t1) <- c("brd", "lat", "freq")
-str(t1)                                                                         #check to make sure table looks correct
+     #check to make sure table looks correct
+str(t1)
 
-#model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)               #create logistic regression model and view log odds ratios
+     #create logistic regression model and view log odds ratios***NOT USED***
+#model1 <- glm(brd ~ lat, family=binomial, data=t1, weights=freq)
 #summary(model1)
 #confint(model1)
   #OR table
-#t2 <- exp(cbind(OddsRatio=coef(model1), confint(model1))) %>%                  #extract odds ratios and confidence intervals
+     #extract odds ratios and confidence intervals
+#t2 <- exp(cbind(OddsRatio=coef(model1), confint(model1))) %>%
 #  round(digits=4)
 #t2[c(2,3),]
 
   #multinomial model
-model2 <- multinom(lat ~ brd, data = t1, weights = freq)                        #more appropriate model - but not comparing L to R
+     #more appropriate model - but not comparing L to R
+model2 <- multinom(lat ~ brd, data = t1, weights = freq)
 summary(model2)
 exp(coef(model2))
 exp(confint(model2))
 
-t1$lat <- fct_relevel(t1$lat, "R")                                              #relevel to compare L vs R
+     #relevel to compare L vs R
+t1$lat <- fct_relevel(t1$lat, "R")
 
 model3 <- multinom(lat ~ brd, data = t1, weights = freq)                      
 summary(model3)
