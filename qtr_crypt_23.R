@@ -76,7 +76,8 @@ contrast(emmout, "trt.vs.ctrl") #same results narrowing down groups to QH vs. ea
      #relevel to compare L vs R
 
 t1$lat <- fct_relevel(t1$lat, "Rt")
-t2 <- filter(t1, lat != "Bilat")
+t2 <- t1 %>% filter(lat != "Bilat", .preserve=FALSE) %>%
+  droplevels()
 
 model3 <- multinom(lat ~ brd, data = t2, weights = freq)                      
 summary(model3)
