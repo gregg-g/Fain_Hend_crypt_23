@@ -15,7 +15,10 @@ str(data); levels(data$brd); levels(data$lat)
 
      #plot laterality by breed
 p1 <- ggplot(data=data, aes(brd, fill=lat))
-p1 + geom_bar(position="fill")
+p1 + geom_bar(position="fill") +
+  labs(x='Breed',
+       y='Proportion of Total',
+       legend='Laterality')
 ggsave("plot1", device="png")
 
 p2 <- ggplot(data=data, aes(lat, fill=brd))
